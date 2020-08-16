@@ -1,0 +1,52 @@
+// Symbol sets can be combined with the union operator (++). If the symbols in sets A and B are disjoint,
+// the symbol type constructed by A ++ B contains the symbols of both A and B.
+sym NiceColor = { yellow, orange, green, white }
+sym SadColor = { brown, black, gray, onyx }
+sym Color = NiceColor ++ SadColor // = { yellow, orange, green, white, brown, black, gray, onyx }
+
+// However, if sets A and B are not disjoint, the conflicting symbols must be qualified by their full names.
+sym A = { a, c }
+sym D = { d, c }
+sym AD = A ++ D // = { a, A.c, d, D.c }
+
+// When matching, an original symbol set can be used to categorize a symbol:
+color match {
+    case _: NiceColor => ":)"
+    case _: SadColor => ":("
+    case _ => ":|"
+}
+
+// In general, symbols are referred to with their full name:
+val yellow = NiceColor.yellow
+val yellow = Color.yellow
+val a = A.a
+val a = AD.a
+val c: AD = A.c     ### Should we recommend this? This is legal, since A.c is also an element of AD. But is this good practice?
+val c = AD.A.c      ### Or should this be preferred?
+
+// However, if the type is clear from context, the symbol may be accessed with the ' name qualifier.
+val yellow: Color = 'yellow
+color match {
+  case 'yellow => 1
+  case 'brown => 2
+  case c => 0
+}
+rectangle.border.color = 'black
+rectangle.fill('yellow)
+
+// Anonymous symbol sets can also be constructed, which are useful as a temporary function return type.
+/** @return 'left, if a is greater. 'right, if b is greater. 'none if a equals b. */
+func compare(a: String, b: String): sym { left, right, none } = ...
+
+compare(a, b) match {
+  case 'left => a
+  case 'right => b
+  case 'none => a + b
+}
+
+// They are also useful for categorizing:
+color match {
+  case _: sym { yellow, orange, green, brown, onyx } => "has saturation"
+  case _: sym { white, black, gray } => "has no saturation"
+  case _ => "unknown"
+}

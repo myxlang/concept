@@ -1,0 +1,48 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def authenticate(username: String, password: String): set{success, user_not_found, invalid_password} = {
+    val user = userDao.find(username)
+    if user == None {
+        return 'user_not_found
+    }
+    
+    // ...
+    
+    if compare_passwords(password, user.password) == 'not_equal {
+        return 'invalid_password
+    }
+    
+    // ...
+    
+    return 'success
+}
+

@@ -1,0 +1,23 @@
+
+package rpg
+
+// Declaring Money as tp makes it a "true" new type, which means that
+// you can attach new methods to it and implicit conversions are
+// restricted: BigInt can be implicitly converted to Money, but
+// not vice versa, since Money could extend the method set.
+tp Money = BigInt
+
+// In contrast, we could also define Money as an alias for BigInt,
+// which would mean that it is essentially the same type. Thus, the
+// programmer could not extend the method set for Money.
+alias Money = BigInt
+
+tp ItemRecord = record {
+    String  name
+    Money   price
+}
+
+tp Item = set[ItemRecord] {
+    berry = ('berry', 7)
+    sword = ('sword', 50)
+}
